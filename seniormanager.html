@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Senior Manager Dashboard - Test</title>
+
+  <!-- Icons + fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<!-- Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <!--Date picker cdn-->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="seniormanager.css">
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+<body class="sm-dashboard">
+
+  <!-- TOP BAR -->
+  <header class="topbar" role="banner">
+    <div class="topbar-inner">
+      <div class="app-title">Senior manager dashboard</div>
+
+      <nav class="tabs" aria-label="Primary">
+        <a class="tab active" href="#top" data-tab="top">Distributors</a>
+        <a class="tab" href="#financials" data-tab="financials">Financials</a>
+        <a class="tab" href="#disruptions" data-tab="disruptions">Disruptions</a>
+      </nav>
+
+      <div class="spacer"></div>
+
+    </div>
+  </header>
+
+  <!-- MAIN GRID -->
+  <div class="wrap">
+
+    <!-- ACTIONS COLUMN -->
+    <aside class="alerts" aria-label="Actions">
+      <h3>Actions</h3>
+
+      <button class="alert" type="button" data-action="create-company">
+        <span class="badge good"></span>
+        <div>
+          <div>Create / review company</div>
+          <small>Onboard new partners, update key records.</small>
+        </div>
+      </button>
+
+      <button class="alert" type="button" data-action="review-critical">
+        <span class="badge warn"></span>
+        <div>
+          <div>Review critical companies</div>
+          <small>maybe extra functionality</small>
+        </div>
+      </button>
+
+      <button class="alert" type="button" data-action="investigate-disruptions">
+        <span class="badge bad"></span>
+        <div>
+          <div>Review any Companies Data</div>
+          <small>maybe extra functionality</small>
+        </div>
+      </button>
+
+    </aside>
+
+ <section id="view-top" class="view active">
+  <section class="content">
+    <!-- Date filters -->
+    <div class="filter-bar">
+      <label>Start Date:</label>
+      <input type="date" id="startdate">
+      <label>End Date:</label>
+      <input type="date" id="enddate">
+      <button onclick="onclickDatesOverview()">Load</button>
+      <button onclick="setDefaultDates()">Reset: ALL TIME</button>
+    </div>
+
+    <!-- Search -->
+    <div class="search-wrap">
+      <div class="search-container">
+        <div class="search" aria-label="Company Search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input id="companySearch" type="search" placeholder="Company search…" autocomplete="off" />
+        </div>
+        <div id="searchDropdown" class="search-dropdown"></div>
+      </div>
+    </div>
+
+    <!-- ROW 1: tables -->
+    <div class="overview-row-1">
+      <!-- LEFT: Top distributors -->
+      <article class="card company-card">
+        <h5>Top Distributors by Volume</h5>
+        <div class="table-scroll">
+          <table id="top10-table">
+            <thead>
+              <tr class="bg-primary bg-gradient text-white">
+                <th>#</th>
+                <th>Company</th>
+                <th>Volume</th>
+                <th>On-time%</th>
+              </tr>
+            </thead>
+            <tbody id="distributorsvolume"></tbody>
+          </table>
+        </div>
+      </article>
+
+      <!-- RIGHT: Most critical companies -->
+      <article class="card most-critical-card">
+        <h5>Distributors Supply Chain Resilience Score</h5>
+        <h7>Supply Chain Resilience Score is 1/(1 + (Average Delay Length of Shipments)*(Count of High Impact Frequencies))</h7>
+        <div class="table-scroll table-scroll-tall">
+          <table>
+          <thead>
+           <tr>
+           <th>Distributor</th>
+           <th>Supply Chain Resilience Score</th>
+         </tr>
+       </thead>
+       <tbody id="distributorsresilience"></tbody>
+      </table>
+        </div>
+      </article>
+    </div>
+
+    <!-- ROW 2: charts -->
+    <div class="overview-row-2">
+      <article class="card chart-card">
+        <h5>High Impact diruption count across top distributors</h5>
+        <div class="chart-container">
+          <div id="yearlyDisruptionsChart"></div>
+        </div>
+      </article>
+
+      <article class="card chart-card">
+        <h5>Average shipment delay of all distributors</h5>
+        <div class="chart-container">
+          <div id="DelayedDistributorsChart"></div>
+        </div>
+      </article>
+    </div>
+  </section>
+</section>
+
+
+    <!-- ===== FINANCIALS VIEW ===== -->
+    <section id="view-financials" class="view">
+      <section class="content financials-grid">
+       <div class="filter-bar">
+        <select id="quarterSelectStart">
+           <option value="Q1">Q1</option>
+           <option value="Q2">Q2</option>
+           <option value="Q3">Q3</option>
+           <option value="Q4">Q4</option>
+          </select>
+        <select id="yearSelectStart">
+          <option value="2020">2020</option>
+          <option value="2021">2021</option>
+          <option value="2022">2022</option>
+          <option value="2023">2023</option>
+          <option value="2024">2024</option>
+          <option value="2025">2025</option>
+        </select>
+        <select id="quarterSelectEnd">
+           <option value="Q1">Q1</option>
+           <option value="Q2">Q2</option>
+           <option value="Q3">Q3</option>
+           <option value="Q4">Q4</option>
+          </select>
+        <select id="yearSelectEnd">
+          <option value="2020">2020</option>
+          <option value="2021">2021</option>
+          <option value="2022">2022</option>
+          <option value="2023">2023</option>
+          <option value="2024">2024</option>
+          <option value="2025">2025</option>
+        </select>
+        <button onclick="onclickQuarterFinancial()">Load</button> 
+      </div>
+             <div class="filter-bar">
+        <select id="quarterSelect">
+           <option value="Q1">Q1</option>
+           <option value="Q2">Q2</option>
+           <option value="Q3">Q3</option>
+           <option value="Q4">Q4</option>
+          </select>
+        <select id="yearSelect">
+          <option value="2020">2020</option>
+          <option value="2021">2021</option>
+          <option value="2022">2022</option>
+          <option value="2023">2023</option>
+          <option value="2024">2024</option>
+          <option value="2025">2025</option>
+        </select>
+        <button onclick="onclickQuarterOverview()">Load</button> 
+        <button onclick="setDefaultQuarter()">Reset: CURRENT QUARTER</button> 
+        </div>
+        <article class="card">
+          <h4>Financial score across all companies</h4>
+        
+          <div class="gauge-container">
+          <canvas id="gaugeChart"></canvas>
+          </div>
+          <div class="financial-dial-text">
+          <div id="financialscore"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <h4>Current quarter's financial score by type</h4>
+          <div class="impact-metrics">
+            <div class="impact-row">
+              <div class="impact-label">Manufacturers</div>
+              <div class="impact-values">
+                <span id="financialmanu"></span>
+              </div>
+            </div>
+            <div class="impact-row">
+              <div class="impact-label">Distributors</div>
+              <div class="impact-values">
+                <span id="financialdist"></span>
+              </div>
+            </div>
+            <div class="impact-row">
+              <div class="impact-label">Retailers</div>
+              <div class="impact-values">
+                <span id="financialretail"></span> 
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="card financials-main-top">
+  <div class="financials-header-row">
+    <span>Average financial health by company</span>
+  </div>
+  <div id="FinancialByCompChart"></div>
+</article>
+
+<article class="card financials-main-bottom">
+  <div class="financials-header-row">
+    <span>Average financial health by company type</span>
+  </div>
+  <div id="FinancialByCompTypeChart"></div>
+</article>
+
+
+        <article class="card financials-main-bottom">
+          <div class="financials-header-row">
+            <span>Average financial health by company type</span>
+            
+          </div>
+          <div id="FinancialByCompTypeChart"></div>
+        </article>
+
+        <article class="card financials-regions">
+  <h4>Average Financial Score by Region</h4>
+  <h5><em>Dropdown to view regional companies</em></h5>
+
+  <div class="financials-table-wrapper">
+    <table>
+
+      
+      <thead>
+        <tr class="bg-primary bg-gradient text-white">
+          <th>Region</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody id="regionfinancials"></tbody>
+
+    <thead id="companyHeaderRow">
+    <tr class="bg-primary bg-gradient text-white">
+      <th>Company</th>
+      <th>Score</th>
+    </tr>
+  </thead>
+  <tbody id="regionfinancialsdropdown"></tbody>
+
+  </td>
+</tr>
+
+    </table>
+  </div>
+</article>
+
+        
+
+      </section>
+    </section>
+
+
+
+    <section id="view-disruptions" class="view">
+      <section class="content disruptions-grid">
+
+        <article class="card dis-regions-card">
+          <div class="dis-header-row">Regional Disruptions for 1 Year – Total</div>
+
+          <div class="dis-toggle-row">
+            <button class="dis-toggle active" type="button" data-mode="total">Total</button>
+            <button class="dis-toggle" type="button" data-mode="high">High Impact</button>
+          </div>
+
+          <div id="heatmapPlaceholder" class="dis-heatmap-placeholder">
+            </div>
+        </article>
+
+        <article class="card dis-delay-card">
+          <div class="dis-delay-header">
+            <span>Disruption Severity Distribution (Last Year)</span>
+          </div>
+          <div id="severityDistributionChart"></div>
+        </article>
+
+        <article class="card dis-events-card">
+          <div class="dis-events-header-row">
+            <span>Event</span>
+            <span>Companies Affected</span>
+          </div>
+
+          <div class="dis-events-body">
+            <table id="eventsTable">
+              <tbody>
+                <tr>
+                  <td><input type="text" value="event 1"></td>
+                  <td><input type="text" value="comp1, comp2"></td>
+                </tr>
+                <tr>
+                  <td><input type="text" value="event 2"></td>
+                  <td><input type="text" value="comp3, comp4"></td>
+                </tr>
+                <tr class="plus-row">
+                  <td><button type="button" class="plus-btn" data-which="event">+</button></td>
+                  <td><button type="button" class="plus-btn" data-which="company">+</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="dis-events-footer">
+            <div class="error-text" id="eventsError"></div>
+            <button class="btn btn-primary" type="button" id="saveEventsBtn">Save</button>
+          </div>
+        </article>
+
+        <article class="card dis-bottom-wide">
+          <div class="dis-bottom-header-row">
+            Average daily disruptions over <em>time period</em> – all companies
+            <select id="avgDisTimeRange">
+              <option value="30">Last 30 days</option>
+              <option value="60">Last 60 days</option>
+              <option value="90">Last 90 days</option>
+              <option value="180">Last 180 days</option>
+              <option value="365">Last 365 days</option>
+            </select>
+          </div>
+          <div id="avgDisChart"></div>
+        </article>
+
+        <article class="card dis-company-card">
+          <div class="dis-company-header-row">
+            Disruptions for <em>Company</em>
+          </div>
+          <div class="dis-company-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Start</th>
+                  <th>Recovery</th>
+                  <th>Impact</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td></tr>
+                <tr><td></td><td></td><td></td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+      </section>
+    </section>
+
+  </div>
+
+  <!-- Allows user to input their own company  -->
+  <div class="modal-backdrop" id="companyModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="companyModalTitle">
+      
+      <div class="modal-header">
+        <div class="modal-title" id="companyModalTitle">Create / edit company</div>
+        <button class="btn btn-secondary" type="button" data-close="company-modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+          <div class="form-field">
+            <label for="companyName">Company name</label>
+            <input type="text" id="companyName" name="companyName" autocomplete="off">
+          </div>
+
+          <div class="form-field">
+            <label for="locationId">Location ID</label>
+            <input type="text" id="locationId" name="locationId" autocomplete="off">
+          </div>
+
+          <div class="form-field">
+            <label for="tierLevel">Tier level</label>
+            <select id="tierLevel" name="tierLevel">
+              <option value="">Select tier</option>
+              <option value="1">Tier 1</option>
+              <option value="2">Tier 2</option>
+              <option value="3">Tier 3</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="serviceType">Service</label>
+            <select id="serviceType" name="serviceType">
+              <option value="">Select service</option>
+              <option value="Manufacturer">Manufacturer</option>
+              <option value="Distributor">Distributor</option>
+              <option value="Retailer">Retailer</option>
+            </select>
+          
+
+          <div class="error-text" id="companyFormError"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-close="company-modal">Cancel</button>
+          <button class="btn btn-primary" type="button" onclick="onclickSaveComp()">Save</button>
+        </div>
+        </div>
+
+  </div>
+<!-- After the user creates their company this will pop-up and tell them their new company ID -->
+<div class="modal-backdrop" id="successModal">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <div class="modal-title">Company Created</div>
+      <button class="btn btn-secondary" type="button" data-close="success-modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <p>Your new Company ID is:</p>
+      <h2 id="newCompanyID" style="margin-top:8px;"></h2>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="button" data-close="success-modal">OK</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="criticalModal">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <div class="modal-title">Review Critical Companies</div>
+      <button class="btn btn-secondary" type="button" data-close="critical-modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+        <div class="modal-body">
+        <article class="card">
+        <h5>Most critical companies</h5>
+        <div class="table-scroll table-scroll-tall">
+          <table>
+            <thead>
+              <tr class="bg-primary bg-gradient text-white">
+                <th>Company</th>
+                <th>Criticality</th>
+              </tr>
+            </thead>
+            <tbody id="mostcritcompanies"></tbody>
+          </table>
+        </div>
+      </article>
+        </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="button" data-close="critical-modal">OK</button>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+  <script src="seniormanager.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+</body>
+</html>

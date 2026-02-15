@@ -1,0 +1,944 @@
+:root {
+  --bg: #f8f9fb;
+  --panel: #ffffff;
+  --ink: #111827;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --brand: #2563eb;
+  --good: #10b981;
+  --warn: #f59e0b;
+  --bad: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.5;
+}
+
+/*top bar*/
+.topbar {
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.app-title {
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  transition: 0.15s;
+}
+
+.tab:hover {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+.tab.active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+
+.spacer {
+  flex: 1;
+}
+
+/*Main grid*/
+
+.wrap {
+  max-width: 1400px;
+  margin: 16px auto;
+  padding: 0 20px 24px;
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 16px;
+}
+
+.main {
+  min-width: 0;
+}
+
+/*alerts*/
+
+.alerts {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  position: sticky;
+  top: 76px;
+  height: fit-content;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+.alerts h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--muted);
+  align-items: flex-start;
+  border-radius: 12px;
+}
+
+.alerts h4 {
+  font-size: 14px;
+  text-transform: uppercase;
+  color: var(--muted);
+  align-items: flex-start;
+  letter-spacing: 0.08em;
+  margin-top: 3px;
+  margin-bottom: 5px;
+}
+
+.alert {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  border-radius: 12px;
+  padding: 10px 10px;
+  margin-bottom: 8px;
+  border: 1px dashed var(--line);
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.alert:last-child {
+  margin-bottom: 0;
+}
+
+.alert:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.badge {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  margin-top: 14px;
+}
+
+.badge.good {
+  background: var(--good);
+}
+
+.badge.warn {
+  background: var(--warn);
+}
+
+.badge.bad {
+  background: var(--bad);
+}
+
+/* ========== VIEW + CARD LAYOUT ========== */
+
+.view {
+  display: none;
+}
+
+.view.active {
+  display: block;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: minmax(120px, auto);
+  gap: 16px;
+}
+
+/* Generic card */
+
+.card {
+  background: var(--panel);
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+
+}
+
+.card h4 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+/* Distributor grid specific placement */
+
+.distributors-table {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.distributors-score {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.distributors-chart-left {
+  grid-column: 1;
+  grid-row: 3;
+}
+
+.distributors-chart-right {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+
+
+/* Make all cards in Distributor tab equal height */
+#view-top .card {
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+/* Let tables scroll and fill space */
+#view-top .card .table-scroll {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+#view-top .chart-container {
+  flex: 1;
+  min-height: 0;
+}
+
+
+#view-top .card h5 {
+  flex-shrink: 0;
+  margin-bottom: 6px;
+}
+
+
+#view-top .content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+
+@media (max-width: 900px) {
+  #view-top .content {
+    grid-template-columns: 1fr;
+  }
+
+  
+  #view-top .card {
+    width: 100%;
+  }
+}
+
+
+/* ========== FILTER BAR ========== */
+
+.filter-bar {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+  padding: 10px 12px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  font-size: 13px;
+  border: 1px solid var(--line);
+}
+
+.filter-bar label {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.filter-bar input,
+.filter-bar select,
+.filter-bar button {
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  font-size: 12px;
+}
+
+.filter-bar button {
+  cursor: pointer;
+}
+
+/* ========== TABLES ========== */
+
+
+.table-scroll {
+  overflow-y: auto;
+  max-height: 340px;
+}
+
+.table-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f9fafb;   
+}
+
+.table-scroll-tall {
+  max-height: 260px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+
+}
+
+thead th {
+  background: #f9fafb;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  padding: 6px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+tbody td {
+  border-bottom: 1px solid var(--line);
+  padding: 6px;
+  text-align: left;
+}
+
+/* Highlight header rows that were "bg-primary" in old code */
+thead tr {
+  background: #f9fafb;
+}
+
+/* ========== CHART CONTAINERS ========== */
+
+.chart-card .chart-container {
+  height: 260px;
+}
+
+.chart-container > div {
+  width: 100%;
+  height: 100%;
+}
+
+.chart-scroll {
+  max-height: 260px;      /* same as tables */
+  overflow-y: auto;       /* scroll vertically */
+  overflow-x: hidden;     /* no horizontal scroll */
+  padding-right: 6px;     /* avoids scrollbar overlap */
+}
+
+/* ===== FINANCIALS ===== */
+
+/*columns*/
+#view-financials .content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Filter bar must span the whole width */
+#view-financials .filter-bar {
+  grid-column: 1 / -1;
+}
+
+/* Every card in Financial tab has same height */
+#view-financials .card {
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+/* Chart container should center content */
+#view-financials .chart-container {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Scroll area for charts with many categories */
+#view-financials .chart-scroll {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Tables and region list should scroll */
+#view-financials .financials-table-wrapper,
+#view-financials .table-scroll {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  border-radius: 8px;
+}
+
+/* Divider row on region/company card */
+#view-financials .financials-header-row {
+  flex-shrink: 0;
+  margin-bottom: 6px;
+  padding-bottom: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+
+/* Financial gauge */
+#view-financials .financial-dial-text {
+  position: absolute;
+  bottom: 10%;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--muted);
+  text-align: center;
+  width: 100%;
+}
+
+.gauge-container {
+  position: relative;
+  width: 100%;
+  max-width: 420px;   
+  height: 220px;      
+  margin: 8px auto 0;
+}
+
+
+/*disruptions*/
+
+
+/* top left- regiional disruptions*/
+.dis-regions-card {
+  grid-column: 1/ span 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.dis-header-row {
+  font-size: 12px;
+  font-weight: 100;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 4px;
+  margin-bottom: 10px;
+}
+
+.dis-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+
+.dis-toggle {
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  background: #f9fafb;
+  cursor: pointer;
+  font: inherit;
+  border-radius: 6px;
+}
+
+.dis-toggle.active {
+  background: var(--brand);
+  color: white;
+  border-color: var(--brand);
+}
+
+.regional-date-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+}
+
+.regional-date-container input,
+.regional-date-container button {
+  font-size: 12px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+/* top right - Companies by event */
+
+.dis-events-card {
+  grid-column: 3;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.dis-events-header-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.dis-events-body {
+  flex: 1;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #f9fafb;
+  padding: 0;
+  max-height: 250px;
+  overflow-y: auto;
+  overflow: hidden;
+}
+
+/* bottom left - Average daily disruptions */
+
+.dis-bottom-wide {
+  grid-column: 1 / span 2;
+  grid-row: 2;
+}
+
+.dis-bottom-header-row {
+  font-size: 12px;
+  font-weight: 100px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.avg-date-container {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  margin-left: auto;
+}
+
+.avg-date-container input,
+.avg-date-container button {
+  padding: 4px;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+  font-size: 12px;
+}
+
+/* bottom right - Company disruptions table */
+
+.dis-company-card {
+  grid-column: 3;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.dis-company-header-row {
+  font-size: 12px;
+  font-weight: 600;
+  padding-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.dis-company-table-wrapper {
+  flex: 1;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #f9fafb;
+  padding: 0;
+  max-height: 225px;
+  overflow-y: auto;
+}
+
+/* ========== RESPONSIVE ========== */
+
+@media (max-width: 1100px) {
+  .wrap {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .content.distributors-grid
+  .content.financials-grid,
+  .content.disruptions-grid {
+    grid-template-columns: 1fr;
+  }
+
+   .financials-regions,
+  .distributors-table,
+  .distributors-score,
+  .dis-regions-card,
+  .dis-events-card,
+  .dis-bottom-wide,
+  .dis-company-card {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .alerts {
+    position: static;
+    order: -1;
+  }
+
+  .content {
+    grid-template-columns: 1fr;
+  }
+
+  .modal {
+    max-width: 95vw;
+  }
+
+  .modal-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .company-row {
+    flex-direction: column;
+  }
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  padding: 10px 10px;
+}
+
+.form-field label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.form-field input,
+.form-field select {
+  padding: 7px 9px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  font: inherit;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  outline: 2px solid var(--brand);
+  outline-offset: 1px;
+  border-color: var(--brand);
+}
+
+.form-field input.invalid,
+.form-field select.invalid {
+  border-color: var(--bad);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Buttons + error text */
+
+.btn {
+  border-radius: 999px;
+  border: 1px solid transparent;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-secondary {
+  background: #f3f4f6;
+  border-color: #e5e7eb;
+  color: var(--ink);
+}
+
+.btn-secondary:hover {
+  background: #e5e7eb;
+}
+
+.btn-primary {
+  background: var(--brand);
+  color: #ffffff;
+  border-color: var(--brand);
+}
+
+.btn-primary:hover {
+  filter: brightness(0.95);
+}
+
+.error-text {
+  color: var(--bad);
+  font-size: 12px;
+  min-height: 16px;
+}
+
+/* ===== MODALS ===== */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-backdrop.open {
+  display: flex;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 8px;
+  max-width: 700px;
+  width: 100%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Title + buttons */
+.modal-header,
+.modal-footer {
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.modal-body,
+.modal .card {
+  padding: 8px;
+  overflow: auto;
+  max-height: calc(85vh - 120px);
+}
+
+.modal-subtitle{
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* Make table scroll nicely */
+.modal table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.modal thead th {
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  color:var(--muted);
+  z-index: 1;
+}
+
+.modal tbody {
+  background: white;
+}
+
+/* ===== COMPANY INFO MODAL SEARCH ===== */
+.search-dropdown {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 1001;
+}
+
+.search-dropdown-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--line);
+  transition: background 0.15s;
+}
+
+.search-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.search-dropdown-item:hover {
+  background: #f9fafb;
+}
+
+.search-dropdown-name {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.search-dropdown-meta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Modal close button styling */
+.modal-header .btn {
+  font-size: 24px;
+  line-height: 1;
+  padding: 4px 10px;
+  margin-left: auto;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#view-financials .card {
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+
+.financials-table {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.financials-score {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+
+.financials-chart-left {
+  grid-column: 1;
+  grid-row: 3;
+}
+
+.financials-chart-right {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+
+#view-financials .table-scroll {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+
+#view-financials .chart-container {
+  flex: 1;
+  min-height: 0;
+}
+
+#view-financials .chart-scroll {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+
+.financials-regions .financials-table-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  border-radius: 8px;
+}
+
+/* Responsive collapse 1-column */
+@media (max-width: 1100px) {
+  #view-financials .content {
+    grid-template-columns: 1fr;
+  }
+  
+  .financials-table,
+  .financials-score,
+  .financials-chart-left,
+  .financials-chart-right {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
