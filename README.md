@@ -1,28 +1,28 @@
 # Supply Chain Management Dashboard
-> IE332 Assignment #3 — Purdue University
 
-A full-stack web application providing interactive dashboards for supply chain management, built with PHP, MySQL, JavaScript (ApexCharts), HTML, and CSS.
+Built for IE332 at Purdue. A web app with two dashboards for tracking supply chain data — one for supply chain managers and one for senior managers. Everything is connected to a live MySQL database and updates in real time.
 
-🌐 **Live Site:** [https://web.ics.purdue.edu/~g1151934/Project/index.php](https://web.ics.purdue.edu/~g1151934/Project/index.php)
+ **Live Site:** [https://web.ics.purdue.edu/~g1151934/Project/index.php](https://web.ics.purdue.edu/~g1151934/Project/index.php)
 
 ---
 
-## Overview
+## What it does
 
-This project delivers two role-based dashboards for monitoring and managing supply chain operations:
+There are two dashboards depending on your role:
 
-- **Supply Chain Manager Dashboard** — Company-level insights including KPIs, disruptions, transactions, and financial health.
-- **Senior Manager Dashboard** — Cross-company analytics covering distributors, financials, and disruption trends.
+**Supply Chain Manager** — search and view individual company data, including KPIs, financial health, disruption metrics, and transaction history. You can edit company info directly from the dashboard and filter almost everything by date range, location, status, and more.
+
+**Senior Manager** — broader view across all companies. Has three main tabs (Distributors, Financials, Disruptions) with charts, tables, and fully custom date filters. You can also create new companies from here and review any company's full data including upstream/downstream dependencies.
 
 ---
 
 ## Features
 
 ### Supply Chain Manager Dashboard
-- Company search with live dropdown filtering
-- Company info display with edit/save functionality
-- KPI summary cards (On-Time %, Average Delay, Std Dev, Disruption Count)
-- Financial health line chart with historical trends
+- Company search with live dropdown that filters as you type
+- Edit and save company info directly to the database
+- KPI cards — On-Time %, Average Delay, Std Dev, Disruption Count
+- Financial health line chart with historical trend
 - On-Time Delivery radial/gauge chart
 - Delay metrics with trend chart
 - Disruption Events Distribution bar chart
@@ -30,61 +30,58 @@ This project delivers two role-based dashboards for monitoring and managing supp
 - Total Downtime (TD) histogram
 - Regional Risk Concentration (RRC) heatmap
 - High-Impact Disruption Rate (HDR) radial chart
-- Disruption Severity Distribution (DSD) stacked horizontal bar chart
-- Multi-select company and location filters
-- Transaction tables (Shipping, Receiving, Adjustments) with time range and limit filters
+- Disruption Severity Distribution (DSD) horizontal stacked bar chart
+- Multi-select filters for company and location
+- Transaction tables (Shipping, Receiving, Adjustments) with time range and row limit filters
 - Shipment Volume bar chart
 - On-Time Delivery trend line chart
-- Status Mix bar chart
+- Status Mix bar chart (Pending / On Time / Delayed)
 - Exposure by Lane bar chart
-- Alerts sidebar with severity badges
+- Alerts sidebar with color-coded severity badges
 
 ### Senior Manager Dashboard
-- Review all company data with upstream/downstream dependencies
-- Criticality score ranking table
-- Distributors tab: shipment volume, disruption counts, delay charts, supply chain resilience KPI
-- Financials tab: financial dial, average health by company/type/region
+- Full company info review with upstream/downstream dependencies
+- Companies ranked by criticality score
+- Distributors tab: top distributors by volume, high-impact disruption counts, average shipment delay, supply chain resilience KPI
+- Financials tab: financial health dial, average health by company, by company type, and by region
 - Disruptions tab: frequency over time, regional overview, event-specific company impact, company-specific disruption history
-- Create new company with dynamic location dropdown
-- Custom date range filters with cascading validation (impossible to select invalid ranges)
-- Logout / session management
+- Create new company form with dynamic location dropdown (only shows valid locations from the database)
+- Logout button that properly ends the PHP session
 
-### Extra Features
-- Downloadable bar graphs (Senior Manager Dashboard)
-- Hover tooltips on all charts
-- Zoom / click-and-drag on line graphs
-- Reset filters to default
-- Calendar date picker for filters
-- Mobile-responsive layout
-- Supply chain resilience score KPI
-
----
-
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Frontend | HTML, CSS, JavaScript, ApexCharts |
-| Backend | PHP |
-| Database | MySQL |
-| Hosting | Purdue ICS Web Server |
+### Extra stuff we added
+- Bar graphs on the Senior Manager side are downloadable as images
+- Hover tooltips on every chart
+- Zoom and click-and-drag on line graphs
+- Reset filters button on most tabs
+- Calendar date picker for date filters
+- Date range filters are cascading — you literally cannot select an invalid range, so charts never render empty
+- Works on mobile
 
 ---
 
-## Project Structure
+## Tech used
+
+- PHP + MySQL for the backend
+- HTML, CSS, JavaScript for the frontend
+- ApexCharts for all graphs
+- Hosted on the Purdue ICS web server
+
+---
+
+## Project structure
 
 ```
 /Project
-├── index.php                    # Login page
-├── supplychainmanager.php       # Supply Chain Manager Dashboard
-├── seniormanager.php            # Senior Manager Dashboard
-├── supply chain manager queries.php   # SCM SQL query handlers
-└── seniormanagerqueries.php     # Senior Manager SQL query handlers
+├── index.php                          # Login page
+├── supplychainmanager.php             # Supply Chain Manager Dashboard
+├── seniormanager.php                  # Senior Manager Dashboard
+├── supply chain manager queries.php  # SCM SQL query handlers
+└── seniormanagerqueries.php          # Senior Manager SQL query handlers
 ```
 
 ---
 
-## Login Credentials
+## Login
 
 | Dashboard | Username | Password |
 |---|---|---|
@@ -95,61 +92,45 @@ This project delivers two role-based dashboards for monitoring and managing supp
 
 ## Database
 
-- **MySQL Username:** `g1151934`
-- **Host:** Purdue ICS
-
-> A full SQL export of the database schema and data is included as a separate file with the assignment submission.
+- MySQL hosted on Purdue ICS (`g1151934`)
+- Full SQL export included separately with the assignment submission
 
 ---
 
-## Key SQL Queries
+## Key SQL queries
 
 ### Supply Chain Manager
-- `getCompanyInfo` — Fetches core company data
-- `getKPIs` — On-time %, delay stats, disruption count
-- `getOnTimeDelivery` — Radial chart data
-- `getDelayMetrics` — Avg & std dev delay with trend
-- `getDisruptionDistribution` — Event breakdown by type
+- `getCompanyInfo` — core company data
+- `getKPIs` — on-time %, delay stats, disruption count
+- `getOnTimeDelivery` — radial chart data
+- `getDelayMetrics` — avg & std dev with trend over time
+- `getDisruptionDistribution` — event breakdown by type
 - `getART` — Average Recovery Time by region/supplier
 - `getTD` — Total Downtime by region/supplier
 - `getRRC` — Regional Risk Concentration
 - `getHDR` — High-Impact Disruption Rate
 - `getDSD` — Disruption Severity Distribution
-- `getTransactions` — Filtered transaction history
-- `getShipmentVolume` — Monthly/Quarterly volume
-- `getOnTimeChart` — On-time trend over time
-- `getExposureByLane` — Shipping lane exposure scores
+- `getTransactions` — filtered transaction history
+- `getShipmentVolume` — monthly/quarterly volume
+- `getOnTimeChart` — on-time trend over time
+- `getExposureByLane` — shipping lane exposure scores
 
 ### Senior Manager
-- Company search, dependencies, financial health, capacity routes
+- Company search, upstream/downstream dependencies, financial health, capacity routes
 - Top distributors by volume, high-impact disruption counts, average shipment delay
 - Financial scores by company, type, and region
-- Disruption frequency, regional overview, event-specific and company-specific disruption data
+- Disruption frequency over time, regional overview, event-specific and company-specific disruption history
 
 ---
 
 ## Testing
 
-Over 60 documented test cases were executed across both dashboards covering:
-
-- Authentication and URL tamper protection
-- Filter functionality (date ranges, dropdowns, multi-select)
-- Chart rendering and data accuracy
-- Mobile and half-screen responsiveness
-- Edit/save database operations
-- Edge cases (empty data, invalid ranges, repeated clicks)
-
-All test cases passed by the final submission date (December 10).
+We wrote and ran 60+ test cases across both dashboards. Things we tested: authentication and URL tamper protection, all filter combos (date ranges, dropdowns, multi-select), chart data accuracy, mobile and half-screen layouts, edit/save flows, and edge cases like empty data ranges, invalid inputs, and rapid repeated clicks. Everything was passing by December 10.
 
 ---
 
 ## Team
 
-This project was built collaboratively by a team of 6 students, each contributing to different areas including frontend development, backend/SQL queries, chart integration, testing, and video production.
+Built collaboratively by a team of 6 students for IE332 – Computing in Industrial Engineering, Purdue University (West Lafayette, IN).
 
----
-
-## Course
-
-**ERP & Supply Chain Analytics Project** — West Lafayette, IN
-IE 332 – Computing in Industrial Engineering
+**ERP & Supply Chain Analytics Project**
