@@ -88,8 +88,8 @@ This project delivers two role-based dashboards for monitoring and managing supp
 
 | Dashboard | Username | Password |
 |---|---|---|
-| Supply Chain Manager | `John D` | `password` |
-| Senior Manager | `Jane D` | `password` |
+| Supply Chain Manager | `John_D` | `password` |
+| Senior Manager | `Jane_D` | `password` |
 
 ---
 
